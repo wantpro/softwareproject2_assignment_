@@ -1,0 +1,45 @@
+#define PIN_LED 7
+int duty = 0;
+int light = 0;
+int delay_s = 0;
+
+
+void set_period(int period){
+  delay_s = (float)period / 100; 
+  //주기는 원래 값으로 돌아오는 것이기 때문에 한 주기는 200으로 쪼개져야 0 -> 100 -> 0 이 가능해진다. 하지만 0.1ms의 경우 이렇게 쪼개면(delay_s=0.5) 그 케이스에서 함수가 작동하지 않으므로 부득이하게 반 주기 단위로 함수를 구성하였다.
+  
+}
+
+void set_duty(int duty){
+  light = ((float)duty/100) * 255; //실제 입력값으로 백분율 환산
+  light = round(light);  //보다 정확한 값 위해 반올림해줌
+  }
+
+void setup() {
+  pinMode(PIN_LED, OUTPUT);
+
+  Serial.begin(115200);
+  while (!Serial) {
+    ;
+  }
+
+  set_period(10000);
+}
+
+void loop() {
+  set_duty(duty);
+  while(duty<100){
+    analogWrite(PIN_LED, light);
+    duty = duty + 1;
+    set_duty(duty);
+    delayMicroseconds(delay_s);
+  }
+  while(duty>0){
+    analogWrite(PIN_LED, light);
+    duty = duty - 1;
+    set_duty(duty);
+    delayMicroseconds(delay_s);
+  }
+  
+  
+}
