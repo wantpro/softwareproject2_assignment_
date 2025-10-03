@@ -92,7 +92,7 @@ void loop() {
       if(N%2==0){
         dist_median = (temp_array[N/2]+temp_array[(N/2)-1])/2;
       }else{
-        dist_median = temp_array[N/2];
+        dist_median = temp_array[(N-1)/2];
       }
 
   // Modify the below line to implement the EMA equation
