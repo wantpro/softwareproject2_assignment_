@@ -1,0 +1,44 @@
+#include <Servo.h>
+#define PIN_SERVO 10
+
+// 모터의 실제 펄스 값을 정의
+#define _DUTY_MIN 544   // 0도 
+#define _DUTY_NEU 1480  // 90도
+#define _DUTY_MAX 2690  // 180도
+
+/*
+// 180도/60초 실험용 (초당 3도)
+float _SERVO_SPEED = 3.0;
+float TARGET_ANGLE = 180.0;
+float SLOPE = (_DUTY_MAX - _DUTY_MIN) / TARGET_ANGLE;
+*/
+
+
+// 90도/300초 실험용 (초당 0.3도)
+float _SERVO_SPEED = 0.3;
+float TARGET_ANGLE = 90.0;
+float SLOPE = (_DUTY_NEU - _DUTY_MIN) / TARGET_ANGLE;
+
+
+float angle = 0;
+int trans_angle = 0;
+Servo myservo;
+
+void setup() {
+  myservo.attach(PIN_SERVO); 
+  
+  myservo.writeMicroseconds(_DUTY_MIN); //0도로 위치 초기화
+  delay(1000); // 1초 대기
+}
+
+void loop() {
+  
+  
+  trans_angle = (int)(angle * SLOPE) + _DUTY_MIN; //각도 > 실제 입력되는 값으로 바꾸기 위한 식
+  
+  if(angle <= TARGET_ANGLE){ 
+    myservo.writeMicroseconds(trans_angle);
+    angle += _SERVO_SPEED;//각도 누적
+    delay(1000);//1초 기다리기
+  }
+}
